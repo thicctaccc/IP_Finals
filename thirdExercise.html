@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Exercise 3</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+</head>
+<style>
+body {
+  background-image: url("bck.jpg");
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+}
+.card-body {
+  font-family: "Times New Roman";
+}
+.card {
+  max-width: 1500px;
+  margin: center;
+  font-size: 20px;
+  background-color: #1e1e2f;
+  color: white;
+}
+</style>
+<body class="col">
+<br />
+<br />
+    <form id="callDB" class="col-md-12">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+
+            <div class="card-header"> Student List </div>
+            <div class="card-body">
+                <h5 class="card-title">Calling api method</h5>
+                <p>Clicking on the button will return an array of objects.</p>
+                <input type="button" value="Display All Students" id="btnGetPosts" class="btn btn-primary">
+            </div>
+        </div>
+      </div>
+        <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Call api single record</h5>
+                <label for="userId">ID [ex.7c3d0fb2-5508-408d-9abf-90eaf97311be]</label>
+                <input type="text" class="form-control" id="userId" aria-describedby="idHelp" placeholder="User Id" required><br>
+                <input type="button" value="Show single record" id="btnGetPostSingle" class="btn btn-link btn-danger">
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <br>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Student ID</th>
+                <th scope="col">Email address</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody id="tblBody"></tbody>
+    </table>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous" ></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous" ></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js">
+</script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqBootstrapValidation/1.3.7/jqBootstrapValidation.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+      toastr.options = {
+          "closeButton": false,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": true,
+          "positionClass": "toast-bottom-full-width",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": "300",
+          "hideDuration": "1000",
+          "timeOut": "5000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+      };
+
+        $('#btnGetPosts').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: 'https://ip-uacs.herokuapp.com/api/student',
+                dataType: 'json',
+                success: function (data) {
+
+                    $('#tblBody').empty();
+                    $.each(data, function (index, val) {
+
+                        var content = '<tr>';
+                        content += '<td>' + val.id + '</td>';
+                        content += '<td>' + val.firstName + '</td>';
+                        content += '<td>' + val.lastName + '</td>';
+                        content += '<td>' + val.studentId + '</td>';
+                        content += '<td>' + val.email + '</td>';
+                        content += '<td>' + val.createdDate + '</td>';
+
+                        content += '</tr>';
+
+                        $('#tblBody').append(content);
+                    });
+                }
+            });
+
+        });
+    });
+
+    $('#btnGetPostSingle').click(function () {
+        var userId = $('#userId').val();
+        $.ajax({
+            type: 'GET',
+            url: 'https://ip-uacs.herokuapp.com/api/student/' + userId,
+            dataType: 'json',
+            success: function (data) {
+
+                $('#tblBody').empty();
+
+                var content = '<tr>';
+                content += '<td>' + data.id + '</td>';
+                content += '<td>' + data.firstName + '</td>';
+                content += '<td>' + data.lastName + '</td>';
+                content += '<td>' + data.studentId + '</td>';
+                content += '<td>' + data.email + '</td>';
+                content += '<td>' + data.createdDate + '</td>';
+                content += '</tr>';
+
+                $('#tblBody').append(content);
+            }
+        });
+    });
+
+
+</script>
+</html>

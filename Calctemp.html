@@ -1,0 +1,40 @@
+<html>
+<head>
+<style>
+body {background-color: #ccddff;}
+.content {
+  max-width: 500px;
+  margin: auto;
+  font-size: 20px;
+  font-family: 'Courier New';
+}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<script type="text/javascript">
+function CalculateTemp(){
+	temp=document.getElementById("valFrom").value
+	if (window.XMLHttpRequest){
+  		xmlhttp=new XMLHttpRequest();
+  	}else {
+  		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  	}
+	xmlhttp.onreadystatechange=function(){
+  	if (xmlhttp.readyState==4 && xmlhttp.status==200){
+		    document.getElementById("result").innerHTML=xmlhttp.responseText;
+    	}
+  	}
+	xmlhttp.open("GET","temp.php?val="+temp+"&t=" + Math.random(),true);
+	xmlhttp.send();
+}
+</script>
+</head>
+<body>
+  <div class="content">
+
+	<label> Enter the temp in Fahrenheit</label> <br><br>
+  <input type="Text" name="valFrom" id="valFrom">
+	<strong><div id="result" >&nbsp;</div></strong>
+	<button style="background-color: #004d99; border: none; border-radius: 5px; color: white; /* Dark grey */ padding: 15px 32px" onclick="CalculateTemp()">Submit</button>
+</div>
+</body>
+</html>
